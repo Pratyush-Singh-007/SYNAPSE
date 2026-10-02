@@ -234,42 +234,45 @@ SYNAPSE is architected as an **ultra-low-latency, zero-external-dependency distr
 
 ### 1. Multi-Tiered System Architecture
 
+<p align="center">
+  <img src="docs/images/system_architecture.jpg" alt="SYNAPSE System Architecture Blueprint" width="100%">
+</p>
+
 ```mermaid
 flowchart TD
-    subgraph Layer1 ["🖥️ 1. CLIENT PRESENTATION LAYER (Web Client)"]
-        UI_Cockpit["Tactical C2 Cockpit Canvas\n(2D MGRS Cartography)"]:::clientStyle
-        UI_Comms["Tactical Radio Net (TAC-NET)\n(Web Audio Squelch Engine)"]:::clientStyle
-        UI_FLIR["UAV FLIR Thermal Inset\n(Black-Hot / White-Hot IR)"]:::clientStyle
-        UI_Spec["RF Spectrum Analyzer\n(30MHz - 7.2GHz / FHSS ECCM)"]:::clientStyle
-        UI_EXCON["EXCON God-Mode Console\n(Ad-Hoc Injects & Dual Reality)"]:::clientStyle
-        UI_AAR["AAR Interactive Dossier\n(Timeline & Doctrine Audit)"]:::clientStyle
+    subgraph L1 ["🖥️ 1. CLIENT PRESENTATION TIER (Web Client)"]
+        UI_1["Tactical C2 Cockpit Canvas"]:::clientStyle
+        UI_2["Web Audio TAC-NET Radio"]:::clientStyle
+        UI_3["UAV Black-Hot FLIR Inset"]:::clientStyle
+        UI_4["RF Spectrum Analyzer"]:::clientStyle
+        UI_5["EXCON God-Mode Console"]:::clientStyle
+        UI_6["Interactive AAR Dossier"]:::clientStyle
     end
 
-    subgraph Layer2 ["⚡ 2. NETWORK PROTOCOL & GATEWAY LAYER (Python Stdlib)"]
-        WS_Server["RFC-6455 WebSocket Engine\n(Binary & Text Frame Processor)"]:::gatewayStyle
-        HTTP_Server["HTTP/1.1 REST & Asset Server\n(Zero-Dependency Web Server)"]:::gatewayStyle
-        Room_Router["Room Session Multiplexer\n(ALPHA-6, BRAVO-2, TASKFORCE)"]:::gatewayStyle
+    subgraph L2 ["⚡ 2. NETWORK PROTOCOL & GATEWAY TIER (Python Stdlib)"]
+        GW_1["RFC-6455 WebSocket Engine"]:::gatewayStyle
+        GW_2["HTTP/1.1 REST & Asset Server"]:::gatewayStyle
+        GW_3["Room Session Multiplexer"]:::gatewayStyle
     end
 
-    subgraph Layer3 ["⚙️ 3. CORE SIMULATION & PHYSICS ENGINE (sim.engine)"]
-        SimLoop["10 Hz Asyncio Event Loop\n(Tick: 100ms)"]:::simStyle
-        Truth_State["Ground Truth Physics State\n(Kinematics, Health, Ammo, LOS)"]:::simStyle
-        RoE_Rules["Rules of Engagement (RoE)\n(Combat Calculus & Attrition)"]:::simStyle
+    subgraph L3 ["⚙️ 3. SIMULATION & PHYSICS ENGINE (sim.engine)"]
+        SIM_1["10 Hz Asyncio Event Loop"]:::simStyle
+        SIM_2["Ground Truth Kinematics & LOS"]:::simStyle
+        SIM_3["Rules of Engagement Calculus"]:::simStyle
     end
 
-    subgraph Layer4 ["📡 4. MULTI-DOMAIN DEGRADATION PIPELINE (sim.degradation)"]
-        EW_Engine["Electronic Warfare Module\n(Krasukha-4 Jamming & SINR)"]:::degradeStyle
-        Delay_Buffer["Stochastic Latency Queue\n(FIFO Delays: 15s - 90s)"]:::degradeStyle
-        Markov_Drop["Markov Packet Loss Filter\n(Loss: 45% - 85%)"]:::degradeStyle
-        GPS_Spoof["GPS Ephemeris Spoofing Math\n(Coordinate Skew Vectors)"]:::degradeStyle
-        Cyber_Freeze["Cyber BFT Clamp Engine\n(60s Blue Force Freeze)"]:::degradeStyle
-        Parity_Corrupt["Lexical Parity Noise Engine\n(SITREP Text Scrambling)"]:::degradeStyle
+    subgraph L4 ["📡 4. MULTI-DOMAIN DEGRADATION PIPELINE (sim.degradation)"]
+        DEG_1["Krasukha-4 Jamming Margin"]:::degradeStyle
+        DEG_2["Stochastic Delay Queue"]:::degradeStyle
+        DEG_3["Markov Packet Loss Filter"]:::degradeStyle
+        DEG_4["GPS Ephemeris Spoofing"]:::degradeStyle
+        DEG_5["Cyber BFT Freeze Clamp"]:::degradeStyle
     end
 
-    subgraph Layer5 ["📊 5. AAR ANALYTICS & DOCUMENT GENERATION CORE (sim.aar)"]
-        Audit_Ledger["Event-Sourcing Audit Ledger\n(Directives, Timestamps, Rationales)"]:::aarStyle
-        Doctrine_Grader["Cognitive Telemetry & Scoring\n(Hesitation, Divergence, Mission Command)"]:::aarStyle
-        PDF_Engine["Zero-Dependency PDF 1.4 Binary Generator\n(Cross-Platform Dossier Compiler)"]:::aarStyle
+    subgraph L5 ["📊 5. AAR ANALYTICS & DOCUMENT CORE (sim.aar)"]
+        AAR_1["Event-Sourcing Audit Ledger"]:::aarStyle
+        AAR_2["ADP 6-0 Cognitive Grader"]:::aarStyle
+        AAR_3["Zero-Dependency PDF 1.4 Binary Generator"]:::aarStyle
     end
 
     classDef clientStyle fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0c4a6e;
@@ -278,56 +281,28 @@ flowchart TD
     classDef degradeStyle fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b;
     classDef aarStyle fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#4c1d95;
 
-    style Layer1 fill:#f0f9ff,stroke:#0284c7,stroke-width:2px,color:#0369a1
-    style Layer2 fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#047857
-    style Layer3 fill:#fffbeb,stroke:#d97706,stroke-width:2px,color:#b45309
-    style Layer4 fill:#fff1f2,stroke:#e11d48,stroke-width:2px,color:#be123c
-    style Layer5 fill:#f5f3ff,stroke:#7c3aed,stroke-width:2px,color:#5b21b6
+    style L1 fill:#f0f9ff,stroke:#0284c7,stroke-width:2px,color:#0369a1
+    style L2 fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#047857
+    style L3 fill:#fffbeb,stroke:#d97706,stroke-width:2px,color:#b45309
+    style L4 fill:#fff1f2,stroke:#e11d48,stroke-width:2px,color:#be123c
+    style L5 fill:#f5f3ff,stroke:#7c3aed,stroke-width:2px,color:#5b21b6
 
-    %% Client to Gateway
-    UI_Cockpit <-->|RFC-6455 Frames| WS_Server
-    UI_Comms <-->|Audio / Text Frames| WS_Server
-    UI_FLIR <-->|Telemetry / Video Metadata| WS_Server
-    UI_Spec <-->|RF Power Telemetry| WS_Server
-    UI_EXCON <-->|Instructor Injections & Controls| WS_Server
-    UI_AAR <-->|REST API / PDF Download| HTTP_Server
-
-    %% Gateway to Room Multiplexer
-    WS_Server --> Room_Router
-    HTTP_Server --> Room_Router
-
-    %% Room Multiplexer to Sim Engine
-    Room_Router --> SimLoop
-    SimLoop --> Truth_State
-    Truth_State --> RoE_Rules
-    RoE_Rules --> Truth_State
-
-    %% Ground Truth to Degradation Pipeline
-    Truth_State --> EW_Engine
-    EW_Engine --> Delay_Buffer
-    EW_Engine --> Markov_Drop
-    Truth_State --> GPS_Spoof
-    Truth_State --> Cyber_Freeze
-    Truth_State --> Parity_Corrupt
-
-    %% Perceived State Assembly & Dispatch
-    Delay_Buffer -->|Tailored Perceived State| WS_Server
-    Markov_Drop -->|Tailored Perceived State| WS_Server
-    GPS_Spoof -->|Tailored Perceived State| WS_Server
-    Cyber_Freeze -->|Tailored Perceived State| WS_Server
-    Parity_Corrupt -->|Tailored Perceived State| WS_Server
-
-    %% Ground Truth & Perceived to AAR Analytics
-    Truth_State -->|Ground Truth Telemetry| Audit_Ledger
-    UI_Cockpit -.->|Commander Rationale Submissions| Audit_Ledger
-    Audit_Ledger --> Doctrine_Grader
-    Doctrine_Grader --> PDF_Engine
-    PDF_Engine -->|Compiled Binary PDF Dossier| HTTP_Server
+    L1 ==>|RFC-6455 Bi-Directional Frames / REST| L2
+    L2 ==>|Session Directives & Auth Dispatch| L3
+    L3 ==>|Ground Truth Kinematic Coordinates| L4
+    L4 ==>|Station-Tailored Perceived World State| L2
+    L3 -.->|Ground Truth State Telemetry| L5
+    L1 -.->|Commander Rationale Audit Log| L5
+    L5 ==>|Automated PDF 1.4 Binary Dossier| L2
 ```
 
 ---
 
 ### 2. End-to-End Operational Lifecycle & Sequence Flow
+
+<p align="center">
+  <img src="docs/images/operational_workflow.jpg" alt="SYNAPSE Operational Decision Workflow & Tactical Lifecycle" width="100%">
+</p>
 
 The following sequence diagram details the end-to-end dataflow of a complete tactical decision cycle: from operator session registration, continuous 10 Hz physical state updates, mandatory decision rationale capture, instructor EW injects, and degradation filtering, to post-mission PDF dossier generation:
 
