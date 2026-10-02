@@ -30,17 +30,18 @@ Contemporary conflicts across Ukraine, the Middle East, and contested maritime l
 1. [The Operational Problem Solved](#-the-operational-problem-solved)
 2. [Doctrinal Foundation: Mission Command](#-doctrinal-foundation-mission-command)
 3. [The 6 Core Platform Functions](#-the-6-core-platform-functions)
-4. [System Architecture & Dataflow](#-system-architecture--dataflow)
-5. [Multi-Domain Degradation Pipeline](#-multi-domain-degradation-pipeline)
-6. [Station Roles & Echelons](#-station-roles--echelons)
-7. [Mathematical Models of Friction](#-mathematical-models-of-friction)
-8. [Automated After Action Review & PDF Dossier](#-automated-after-action-review--pdf-dossier)
-9. [High-Contrast White & Black Tactical Theme](#-high-contrast-white--black-tactical-theme)
-10. [Scenario Catalog](#-scenario-catalog)
-11. [Quick Start & Installation](#-quick-start--installation)
-12. [REST API & WebSocket Protocol Reference](#-rest-api--websocket-protocol-reference)
-13. [Codebase Anatomy](#-codebase-anatomy)
-14. [Test Suite & Verification](#-test-suite--verification)
+4. [Visual Interface & Operational Showcase](#-visual-interface--operational-showcase)
+5. [System Architecture & Dataflow](#-system-architecture--dataflow)
+6. [Multi-Domain Degradation Pipeline](#-multi-domain-degradation-pipeline)
+7. [Station Roles & Echelons](#-station-roles--echelons)
+8. [Mathematical Models of Friction](#-mathematical-models-of-friction)
+9. [Automated After Action Review & PDF Dossier](#-automated-after-action-review--pdf-dossier)
+10. [High-Contrast White & Black Tactical Theme](#-high-contrast-white--black-tactical-theme)
+11. [Scenario Catalog](#-scenario-catalog)
+12. [Quick Start & Installation](#-quick-start--installation)
+13. [REST API & WebSocket Protocol Reference](#-rest-api--websocket-protocol-reference)
+14. [Codebase Anatomy](#-codebase-anatomy)
+15. [Test Suite & Verification](#-test-suite--verification)
 
 ---
 
@@ -130,6 +131,98 @@ SYNAPSE delivers all 6 foundational training functions within **a single, unifie
 - **Algorithmic Doctrine Scoring**: Evaluates hesitation vs initiative and calculates target divergence metrics.
 - **Downloadable Standard PDF Dossier (`/api/aar/download-pdf`)**: Built using a zero-dependency standard PDF 1.4 binary engine.
 - Interactive standalone HTML report viewer (`/aar`) with chronological timeline filters (`ALL`, `ORDERS`, `COMMS`, `CRITICAL`).
+
+---
+
+## 📸 Visual Interface & Operational Showcase
+
+SYNAPSE is engineered with a **high-contrast, daylight C2 military cartography theme** (clean high-visibility white operational canvas `#ffffff`, deep-black structural framing `#0a0a0a`, and precise NATO MIL-STD operational accents). Below is a comprehensive visual walkthrough of the platform's four primary operational interfaces and their underlying capabilities.
+
+---
+
+### 1. Tactical C2 Cockpit & Cartographic Vector Map
+> **Primary Command Station (`WARLORD-6`)** — Where small-team and sub-unit commanders analyze spatial friction, track units under uncertainty, and issue directives with captured operational rationale.
+
+<p align="center">
+  <img src="docs/images/tactical_cockpit.jpg" alt="Tactical C2 Cockpit & Cartographic Vector Map" width="100%">
+</p>
+
+#### Operational Features & Visual Anatomy:
+* **MGRS 1:50,000 Precision Vector Grid**: Real-time canvas rendering NATO Military Grid Reference System (MGRS) grid coordinates and topographic contour defiles for terrain-association navigation when satellite navigation is degraded.
+* **NATO MIL-STD-2525D Symbology**: Standardized operational blue rectangles for friendly mechanized infantry (`IRONCLAD-1`) and support armor (`STALWART-2`); hostile red diamonds for OPFOR reconnaissance and armor formations.
+* **Dynamic Uncertainty Circles (Amber Rings)**: Concentric expanding dashed rings representing positional variance ($\sigma_{pos}$). When RF jamming causes blue-force telemetry packets to drop, the uncertainty circle expands dynamically to visualize the commander's fog of war.
+* **Krasukha-4 Jamming Bubble (Purple Radius)**: Directional electronic warfare boundary projecting RF suppression across forward defiles.
+* **Tactical Communications Net (TAC-NET)**: Lower-left tactical radio terminal featuring multichannel selection (`TAC-1 CMD`, `TAC-2 FIRES`, `SQUAD-A`), real-time signal integrity telemetry (`SIGNAL: 28% // DROPPED: 42%`), and parity noise corruption simulation (`[STATIC... BREAKING...]`).
+* **Miniature FLIR UAV Sensor Inset**: Floating high-angle airborne reconnaissance feed providing thermal overwatch directly within the main tactical map canvas.
+* **Mandatory Decision Rationale Prompt**: Clicking any friendly unit to issue a movement or fire directive triggers the Commander Rationale Modal, enforcing doctrine reflection before committing forces.
+
+---
+
+### 2. Specialist Stations: UAV Black-Hot FLIR & RF Spectrum Analyzer
+> **Dual Multi-Domain Sensor Feed** — Real-time airborne thermal surveillance combined with electronic warfare signal detection and frequency-hopping counter-countermeasures (ECCM).
+
+<p align="center">
+  <img src="docs/images/flir_spectrum.jpg" alt="Specialist Stations: UAV FLIR & Spectrum Analyzer" width="100%">
+</p>
+
+#### Operational Features & Visual Anatomy:
+* **UAV Airborne Black-Hot Thermal Camera (Left)**:
+  - **Military Thermal Polarities**: Black-Hot / White-Hot IR imaging exposing engine heat blooms and troop positions through dense foliage and smoke screens.
+  - **PRF Laser Target Designator**: Pulse Repetition Frequency code tracking (`PRF: 1688`) with high-resolution targeting crosshairs and angular gimbal coordinates (`AZ: 042°` / `EL: -28°`).
+  - **Target Tracking & Bounding Box**: Autonomous optical detection tracking hostile armor columns moving along northern roads.
+  - **Comms Link Health Alarm**: Live banner warning of airborne C2 uplink disruption (`UPLINK JAMMING DETECTED - TELEMETRY DEGRADED`).
+* **RF Spectrum Analyzer & ECCM Suite (Right)**:
+  - **Wideband Radio Frequency Sweep**: Real-time power spectrum scanning frequencies from 30 MHz to 7.2 GHz with waterfall spectral density display.
+  - **Hostile Jamming Power Spike**: Clear visualization of enemy Krasukha-4 carrier suppression centered at 450 MHz with high signal-to-noise degradation.
+  - **Fast Frequency-Hopping Spread Spectrum (FHSS)**: Toggleable electronic counter-countermeasure (ECCM) hopping across 1,200 frequencies/second to punch critical tactical directives through enemy electronic noise.
+
+---
+
+### 3. Instructor EXCON (Exercise Control) God-Mode & Injections
+> **Exercise White Cell Control Center (`EXCON-LEAD`)** — The supervisory dashboard giving instructors ground truth visibility, live trainee cognitive telemetry, and ad-hoc friction injection controls.
+
+<p align="center">
+  <img src="docs/images/excon_controller.jpg" alt="Instructor EXCON God-Mode Controller" width="100%">
+</p>
+
+#### Operational Features & Visual Anatomy:
+* **Dual-Layer Reality Map**:
+  - **Ground Truth Tracks (Solid Vector Icons)**: Exact physical coordinates of all blue and red assets in real time.
+  - **Trainee Perceived Reality (Ghosted Markers)**: Visualizes the delayed, drifted, and stale unit locations currently displayed on the trainees' screens.
+* **Interactive EW Jammer Node**: Direct click-and-drag Krasukha-4 emitter node on the tactical map with live adjustment of suppression radius, frequency band, and transmit output.
+* **One-Click Dynamic Injections**:
+  - `⚡ CONTRADICTORY SITREP`: Transmits synthetic ground reports that directly contradict live UAV optical reconnaissance, testing whether commanders cross-reference multiple intelligence domains.
+  - `🛑 CYBER BFT FREEZE`: Locks digital blue force updates for 60 seconds, forcing leaders to switch to voice-procedural reporting.
+  - `🛰️ GPS EPHEMERIS DRIFT`: Injects progressive coordinate spoofing, shifting navigation fixes toward an ambush kill zone.
+* **Live Cognitive & Doctrinal Telemetry**:
+  - **Command Effectiveness Score**: Real-time algorithmic performance metric (85% SUPERIOR).
+  - **Reaction Latency**: Real-time measurement of seconds elapsed between threat emergence and commander decision (14.2s).
+  - **Target Divergence Metric**: Average spatial deviation between commander intended waypoints and actual ground truth positions (310m).
+* **Live Decision Rationale Audit Feed**: Scrolling chronological log displaying every order executed by trainees alongside their written operational rationale.
+
+---
+
+### 4. Automated After Action Review (AAR) & Downloadable PDF Dossier
+> **Post-Mission Analysis & Doctrinal Debrief (`/aar`)** — Comprehensive event-sourcing evaluation and one-click PDF generation capturing the full decision lifecycle under uncertainty.
+
+<p align="center">
+  <img src="docs/images/aar_report.jpg" alt="Automated After Action Review (AAR) Dossier" width="100%">
+</p>
+
+#### Operational Features & Visual Anatomy:
+* **Executive Mission Performance Header**:
+  - Doctrinal Combat Readiness Grade: **85% (SUPERIOR - MISSION COMMAND QUALIFIED)**.
+  - Multi-Domain Operational Metrics: Hesitation Latency (12.4s), Communications Loss Tolerance (88%), Team Positional Divergence (240m), Unit Combat Survivability (91%).
+* **Chronological Decision & Incident Timeline**:
+  - Event category filtering tabs (`ALL EVENTS`, `COMMAND ORDERS`, `COMMS FAILURES`, `CRITICAL INJECTS`).
+  - Microsecond-accurate event timestamps linked to scenario mission clock.
+* **Commander Decision Rationale Audit Cards**:
+  - In-depth cards dissecting each tactical directive issued during the exercise.
+  - Compares the **Commander's Perceived State** at the moment of decision against **Actual Ground Truth**.
+  - Displays the raw rationale text entered by the trainee: *"Ordered 1st Platoon to fall back to defile due to thermal contact contradicting radio silence"*.
+  - Algorithmic doctrinal commentary assessing whether the action adhered to ADP 6-0 Mission Command principles.
+* **One-Click Standard PDF Report Download (`/api/aar/download-pdf`)**:
+  - Generates a formal, printable military debrief dossier using a zero-dependency standard PDF 1.4 binary engine.
 
 ---
 
