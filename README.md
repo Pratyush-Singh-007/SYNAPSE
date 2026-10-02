@@ -228,85 +228,204 @@ SYNAPSE is engineered with a **high-contrast, daylight C2 military cartography t
 
 ## 🏛️ System Architecture & Dataflow
 
+SYNAPSE is architected as an **ultra-low-latency, zero-external-dependency distributed tactical simulation engine**. Built entirely on Python 3.10+ standard asynchronous primitives (`asyncio`, `socket`, `hashlib`, `mimetypes`) and standards-compliant browser APIs (HTML5 Canvas, WebSockets RFC-6455, Web Audio API), it delivers deterministic 10 Hz physics and multi-domain friction without requiring Redis, Celery, Node.js, or external database servers.
+
+---
+
+### 1. Multi-Tiered System Architecture
+
 ```mermaid
 flowchart TD
-    subgraph Browser ["Client Frontend (Web Platform)"]
-        UI_Login["Home / Login"]
-        UI_Lobby["Multiplayer Lobby"]
-        UI_Cockpit["Tactical C2 Cockpit"]
-        UI_FLIR["UAV FLIR Drone View"]
-        UI_Spec["RF Spectrum Analyzer"]
-        UI_EXCON["EXCON Controller"]
-        UI_AAR["Interactive AAR Dossier"]
+    subgraph Layer1 ["1. CLIENT PRESENTATION LAYER (Web Client)"]
+        UI_Cockpit["Tactical C2 Cockpit Canvas\n(2D MGRS Cartography)"]
+        UI_Comms["Tactical Radio Net (TAC-NET)\n(Web Audio Squelch Engine)"]
+        UI_FLIR["UAV FLIR Thermal Inset\n(Black-Hot / White-Hot IR)"]
+        UI_Spec["RF Spectrum Analyzer\n(30MHz - 7.2GHz / FHSS ECCM)"]
+        UI_EXCON["EXCON God-Mode Console\n(Ad-Hoc Injects & Dual Reality)"]
+        UI_AAR["AAR Interactive Dossier\n(Timeline & Doctrine Audit)"]
     end
 
-    subgraph Server ["SYNAPSE Python Async Engine (Zero Dependencies)"]
-        WS_Handler["RFC-6455 WebSocket Server"]
-        HTTP_Handler["HTTP/1.1 Static & API Server"]
-        
-        subgraph Engine ["Scenario Physics & Degradation Engine"]
-            SimLoop["10 Hz Simulation Loop"]
-            WorldState["Ground Truth Physics State"]
-            DegradationPipe["Degradation Pipeline\n(Latency, Dropout, Spoofing)"]
-            AAR_Core["AAR Event Telemetry & Scoring"]
-            PDF_Gen["PDF 1.4 Binary Generator"]
-        end
+    subgraph Layer2 ["2. NETWORK PROTOCOL & GATEWAY LAYER (Python Stdlib)"]
+        WS_Server["RFC-6455 WebSocket Engine\n(Binary & Text Frame Processor)"]
+        HTTP_Server["HTTP/1.1 REST & Asset Server\n(Zero-Dependency Web Server)"]
+        Room_Router["Room Session Multiplexer\n(ALPHA-6, BRAVO-2, TASKFORCE)"]
     end
 
-    UI_Cockpit <-->|WebSocket JSON Frames| WS_Handler
-    UI_EXCON <-->|Instructor Injects| WS_Handler
-    HTTP_Handler -->|Web Assets & REST APIs| Browser
-    
-    WS_Handler --> SimLoop
-    SimLoop --> WorldState
-    WorldState --> DegradationPipe
-    DegradationPipe -->|Tailored Perceived States| WS_Handler
-    WorldState --> AAR_Core
-    AAR_Core --> PDF_Gen
+    subgraph Layer3 ["3. CORE SIMULATION & PHYSICS ENGINE (sim.engine)"]
+        SimLoop["10 Hz Asyncio Event Loop\n(Tick: 100ms)"]
+        Truth_State["Ground Truth Physics State\n(Kinematics, Health, Ammo, LOS)"]
+        RoE_Rules["Rules of Engagement (RoE)\n(Combat Calculus & Attrition)"]
+    end
+
+    subgraph Layer4 ["4. MULTI-DOMAIN DEGRADATION PIPELINE (sim.degradation)"]
+        EW_Engine["Electronic Warfare Module\n(Krasukha-4 Jamming & SINR)"]
+        Delay_Buffer["Stochastic Latency Queue\n(FIFO Delays: 15s - 90s)"]
+        Markov_Drop["Markov Packet Loss Filter\n(Loss: 45% - 85%)"]
+        GPS_Spoof["GPS Ephemeris Spoofing Math\n(Coordinate Skew Vectors)"]
+        Cyber_Freeze["Cyber BFT Clamp Engine\n(60s Blue Force Freeze)"]
+        Parity_Corrupt["Lexical Parity Noise Engine\n(SITREP Text Scrambling)"]
+    end
+
+    subgraph Layer5 ["5. AAR ANALYTICS & DOCUMENT GENERATION CORE (sim.aar)"]
+        Audit_Ledger["Event-Sourcing Audit Ledger\n(Directives, Timestamps, Rationales)"]
+        Doctrine_Grader["Cognitive Telemetry & Scoring\n(Hesitation, Divergence, Mission Command)"]
+        PDF_Engine["Zero-Dependency PDF 1.4 Binary Generator\n(Cross-Platform Dossier Compiler)"]
+    end
+
+    %% Client to Gateway
+    UI_Cockpit <-->|RFC-6455 Frames| WS_Server
+    UI_Comms <-->|Audio / Text Frames| WS_Server
+    UI_FLIR <-->|Telemetry / Video Metadata| WS_Server
+    UI_Spec <-->|RF Power Telemetry| WS_Server
+    UI_EXCON <-->|Instructor Injections & Controls| WS_Server
+    UI_AAR <-->|REST API / PDF Download| HTTP_Server
+
+    %% Gateway to Room Multiplexer
+    WS_Server --> Room_Router
+    HTTP_Server --> Room_Router
+
+    %% Room Multiplexer to Sim Engine
+    Room_Router --> SimLoop
+    SimLoop --> Truth_State
+    Truth_State --> RoE_Rules
+    RoE_Rules --> Truth_State
+
+    %% Ground Truth to Degradation Pipeline
+    Truth_State --> EW_Engine
+    EW_Engine --> Delay_Buffer
+    EW_Engine --> Markov_Drop
+    Truth_State --> GPS_Spoof
+    Truth_State --> Cyber_Freeze
+    Truth_State --> Parity_Corrupt
+
+    %% Perceived State Assembly & Dispatch
+    Delay_Buffer -->|Tailored Perceived State| WS_Server
+    Markov_Drop -->|Tailored Perceived State| WS_Server
+    GPS_Spoof -->|Tailored Perceived State| WS_Server
+    Cyber_Freeze -->|Tailored Perceived State| WS_Server
+    Parity_Corrupt -->|Tailored Perceived State| WS_Server
+
+    %% Ground Truth & Perceived to AAR Analytics
+    Truth_State -->|Ground Truth Telemetry| Audit_Ledger
+    UI_Cockpit -.->|Commander Rationale Submissions| Audit_Ledger
+    Audit_Ledger --> Doctrine_Grader
+    Doctrine_Grader --> PDF_Engine
+    PDF_Engine -->|Compiled Binary PDF Dossier| HTTP_Server
 ```
+
+---
+
+### 2. End-to-End Operational Lifecycle & Sequence Flow
+
+The following sequence diagram details the end-to-end dataflow of a complete tactical decision cycle: from operator session registration, continuous 10 Hz physical state updates, mandatory decision rationale capture, instructor EW injects, and degradation filtering, to post-mission PDF dossier generation:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Trainee as Trainee Commander (WARLORD-6)
+    participant Client as Web Client (Cockpit / TAC-NET)
+    participant Server as Async Gateway (server.py)
+    participant SimEngine as Simulation Engine (sim.engine)
+    participant Degrade as Degradation Pipeline (sim.degradation)
+    actor EXCON as Instructor White Cell (EXCON-LEAD)
+    participant AAR as AAR & PDF Engine (sim.aar)
+
+    Note over Trainee,AAR: PHASE 1: SESSION ESTABLISHMENT & AUTHENTICATION
+    Trainee->>Client: Selects Callsign "WARLORD-6", Room "ALPHA-6"
+    Client->>Server: HTTP GET / & Upgrade to RFC-6455 WebSocket
+    Server->>SimEngine: Register Trainee to Session Room ALPHA-6
+    SimEngine-->>Client: Initial Perceived Operational Picture (Clear Weather, 0% Noise)
+
+    Note over Trainee,AAR: PHASE 2: 10 Hz REAL-TIME SIMULATION & TELEMETRY LOOP
+    loop Every 100ms (10 Hz Tick)
+        SimEngine->>SimEngine: Update Unit Kinematics & Physics Vectors
+        SimEngine->>Degrade: Submit Physical Ground Truth
+        Degrade->>Degrade: Compute Line-of-Sight & RF Jamming Radius
+        Degrade-->>Client: Stream Station-Tailored Perceived World State
+    end
+
+    Note over Trainee,AAR: PHASE 3: DIRECTIVE SUBMISSION WITH MANDATORY RATIONALE
+    Trainee->>Client: Orders "1st Platoon Advance to Defile"
+    Client->>Trainee: Prompts Mandatory "Commander Decision Rationale"
+    Trainee->>Client: Inputs "Advancing to secure high ground before enemy air arrive"
+    Client->>Server: WebSocket Frame: ORDER + RATIONALE + PERCEIVED_TIMESTAMP
+    Server->>AAR: Record Directive, Rationale, and Ground Truth Delta
+    Server->>SimEngine: Queue Unit Movement Vector
+
+    Note over Trainee,AAR: PHASE 4: INSTRUCTOR AD-HOC INJECTIONS & MULTI-DOMAIN FRICTION
+    EXCON->>Server: Injects "Krasukha-4 Jamming (450 MHz, 2.5km Radius)"
+    Server->>Degrade: Activate RF Suppression Field
+    EXCON->>Server: Injects "Contradictory SITREP (Scout reports ambush at Defile)"
+    Server->>Degrade: Intercept TAC-NET Voice/Text Stream
+    Degrade->>Degrade: Apply Parity Noise & 35s Delay Buffer
+    Degrade-->>Client: Corrupted Alert: "[STATIC]... ENEMY ARMOR AT DEFILE ...[BREAK]"
+    Client-->>Trainee: Displays Expanding Amber Uncertainty Circle (σ = 450m)
+
+    Note over Trainee,AAR: PHASE 5: TACTICAL DECISION UNDER DEGRADED CONDITIONS
+    Trainee->>Client: Reviews Contradictory Feeds (UAV Clear vs Scout Ambush)
+    Trainee->>Client: Submits Counter-Order: "Halt at Phase Line Red, Request UAV Cross-Check"
+    Client->>Server: WebSocket Frame: ORDER + RATIONALE
+    Server->>AAR: Log Reaction Latency (14.2s), Hesitation Index, and Adherence to Doctrine
+
+    Note over Trainee,AAR: PHASE 6: EXERCISE COMPLETION & AUTOMATED AAR DOSSIER EXPORT
+    EXCON->>Server: Triggers "END SIMULATION & COMPILE AAR"
+    Server->>AAR: Aggregate All Audit Events, Attrition, and Decision Timelines
+    AAR->>AAR: Execute ADP 6-0 Mission Command Scoring Algorithm
+    Client->>Server: HTTP GET /api/aar/download-pdf
+    Server->>AAR: Generate Zero-Dependency PDF 1.4 Binary Dossier
+    AAR-->>Server: Return Formatted PDF Binary Stream
+    Server-->>Client: Transmit "AAR_ALPHA-6_Report.pdf" (Instant Download)
+```
+
+---
+
+### 3. Component Responsibility Matrix
+
+| Subsystem Component | File Path | Architectural Layer | Concurrency Model | Primary Responsibilities |
+| :--- | :--- | :--- | :--- | :--- |
+| **Network Gateway** | [`server.py`](file:///Users/pratyush/Desktop/Immersive%20Multi-Domain%20Decision-Making%20Trainer%20for%20Degraded%20Communication%20Environments/server.py) | Protocol & Transport | `asyncio.StreamServer` | Handshake RFC-6455 WebSockets, route REST endpoints, manage client connection pools, multiplex rooms. |
+| **Simulation Engine** | [`sim/engine.py`](file:///Users/pratyush/Desktop/Immersive%20Multi-Domain%20Decision-Making%20Trainer%20for%20Degraded%20Communication%20Environments/sim/engine.py) | Physics & State | 10 Hz Non-Blocking Loop | Update entity kinematic vectors, compute line-of-sight defiles, resolve Rules of Engagement, manage room state. |
+| **Degradation Pipeline** | [`sim/degradation.py`](file:///Users/pratyush/Desktop/Immersive%20Multi-Domain%20Decision-Making%20Trainer%20for%20Degraded%20Communication%20Environments/sim/degradation.py) | Multi-Domain Friction | Stateless per-tick Transform | Calculate RF jamming margins (SINR), queue stochastic latency buffers, inject Markov packet loss, spoof GPS vectors. |
+| **Scenario Catalog** | [`sim/scenarios.py`](file:///Users/pratyush/Desktop/Immersive%20Multi-Domain%20Decision-Making%20Trainer%20for%20Degraded%20Communication%20Environments/sim/scenarios.py) | Domain Configurations | Declarative Factory | Define operational OOBs (Order of Battle), terrain contour defiles, waypoint networks, initial jammer nodes. |
+| **AAR & PDF Engine** | [`sim/aar.py`](file:///Users/pratyush/Desktop/Immersive%20Multi-Domain%20Decision-Making%20Trainer%20for%20Degraded%20Communication%20Environments/sim/aar.py) | Analytics & Documents | Event Sourcing & Synchronous | Immutable telemetry ledger, ADP 6-0 Mission Command scoring algorithms, zero-dependency PDF 1.4 binary compiler. |
+| **Tactical Client App** | [`static/app.js`](file:///Users/pratyush/Desktop/Immersive%20Multi-Domain%20Decision-Making%20Trainer%20for%20Degraded%20Communication%20Environments/static/app.js) | Presentation & UI | Single-threaded Browser Loop | High-contrast vector canvas cartography, Web Audio radio squelch synthesizer, decision modal, WebSocket state sync. |
+| **Tactical Shell** | [`static/index.html`](file:///Users/pratyush/Desktop/Immersive%20Multi-Domain%20Decision-Making%20Trainer%20for%20Degraded%20Communication%20Environments/static/index.html) | Presentation & Styles | DOM / CSS3 Grid | High-contrast White & Black daylight C2 styling, NATO iconography, UAV FLIR optic, RF spectrum visualizer. |
 
 ---
 
 ## 📡 Multi-Domain Degradation Pipeline
 
-The degradation engine intercepts physical ground truth and computes a distinct **Perceived World State** tailored to each station:
+The degradation engine acts as an active **Man-in-the-Middle (MitM) filter** between physical battlefield ground truth and what is displayed on each commander's workstation:
 
-```
-[Ground Truth Unit Coords]
-           │
-           ▼
-┌──────────────────────────────────────────────┐
-│  Line-of-Sight & RF Proximity Check          │
-│  Distance to Krasukha-4 Jammer ≤ R_jam?      │
-└──────────────────────┬───────────────────────┘
-                       │
-       ┌───────────────┴───────────────┐
-       ▼ YES                           ▼ NO
-┌──────────────────────────────┐  ┌──────────────────────────────┐
-│ RF Contested Domain          │  │ Uncontested Domain           │
-│ • Latency: +15s to +90s      │  │ • Latency: 25ms              │
-│ • Packet Drop: 45% - 85%     │  │ • Packet Drop: < 1%          │
-│ • Text Parity: Corruption    │  │ • Text Parity: 100% Clear    │
-│ • BFT Status: STALE TRACKS   │  │ • BFT Status: REAL-TIME      │
-└──────────────┬───────────────┘  └──────────────┬───────────────┘
-               │                                 │
-               └───────────────┬─────────────────┘
-                               ▼
-┌──────────────────────────────────────────────┐
-│  GPS Spoofing Check                          │
-│  Inside Spoofing Emitter Envelope?           │
-│  --> Apply Offset Vector ΔX = +85m, ΔY = -45m│
-└──────────────────────┬───────────────────────┘
-                       │
-                       ▼
-┌──────────────────────────────────────────────┐
-│  Cyber Disruption State Check                │
-│  BFT Freeze active?                          │
-│  --> Clamp apparent positions to T_freeze    │
-└──────────────────────┬───────────────────────┘
-                       │
-                       ▼
-           [Station Perceived State]
+```mermaid
+flowchart TD
+    GT["Ground Truth Physical Unit State\n(True Coordinates X, Y, Z, Status)"] --> LOS_Check{"Line-of-Sight & Proximity Check\nDistance to Krasukha-4 <= R_jam?"}
+
+    LOS_Check -- "YES (Within Jamming Cone)" --> JammedZone["CONTESTED RF DOMAIN\n(SINR < Threshold Gamma)"]
+    LOS_Check -- "NO (Clear Field)" --> ClearZone["UNCONTESTED RF DOMAIN\n(SINR >= Threshold Gamma)"]
+
+    JammedZone --> LatencyCalc["Apply Stochastic Latency Buffer\nDelta_t = Uniform(15s, 90s)"]
+    JammedZone --> MarkovLoss{"Markov Packet Loss Check\nRandom() < P_drop (45% - 85%)?"}
+
+    MarkovLoss -- "DROP (Loss)" --> PacketDropped["Drop Telemetry Frame\n(Trainee Receives No Update)"]
+    MarkovLoss -- "PASS (Arrived)" --> NoiseInject["Apply Lexical Parity Noise\nReplace Characters with [STATIC/CORRUPT]"]
+
+    ClearZone --> NormalDelay["Standard Network Latency\nDelta_t = 25ms // Loss < 1%"]
+
+    LatencyCalc --> GPSSpoofCheck{"GPS Ephemeris Spoofing Active?\nTarget in Spoofing Polygon?"}
+    NoiseInject --> GPSSpoofCheck
+    NormalDelay --> GPSSpoofCheck
+
+    GPSSpoofCheck -- "YES" --> ApplyDrift["Add Ephemeris Offset Vector\nX_perceived = X_true + Delta_X (+85m)\nY_perceived = Y_true + Delta_Y (-45m)"]
+    GPSSpoofCheck -- "NO" --> CyberFreezeCheck{"Cyber BFT Freeze Active?\nT_now - T_freeze < 60s?"}
+
+    ApplyDrift --> CyberFreezeCheck
+
+    CyberFreezeCheck -- "YES" --> ClampCoords["Clamp Unit Coordinates\nX_perceived = X_frozen\nY_perceived = Y_frozen\nExpand Uncertainty Radius (sigma)"]
+    CyberFreezeCheck -- "NO" --> FinalState["Assemble Tailored Perceived World State\nSerialize into RFC-6455 Frame"]
+
+    ClampCoords --> FinalState
+    FinalState --> TraineeStation["Deliver to Station Cockpit Display"]
 ```
 
 ---
